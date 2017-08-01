@@ -28,8 +28,8 @@ class BigWorkThread(QtCore.QThread):
     def __init__(self,url,addr, parent=None):
         super(BigWorkThread, self).__init__(parent)
         self.globalurl = url
-        self.addr = addr
-    
+        self.addr = addr.replace('\\','/')
+        
     # 获取网页html源码    
     def getHtml(self,globalurl):
         proxy_handler = urllib2.ProxyHandler({'http': '127.0.0.1:11211'})
@@ -45,9 +45,11 @@ class BigWorkThread(QtCore.QThread):
         imgre = re.compile(reg)
         imglist = re.findall(imgre,html)
         
+        domain = self.getDomainTop()
+        
         # 图片地址加头
         for i in range(len(imglist)):
-            imglist[i] = "http://sabrinacarpenterbr.com/galeria/"+str(imglist[i])
+            imglist[i] = domain+str(imglist[i])
             imglist[i] = imglist[i].replace('thumb_','')
             i += 1
         #self.download(imglist)
@@ -62,7 +64,11 @@ class BigWorkThread(QtCore.QThread):
             #传回进度信号
             self.progress.emit([self.jpgx,self.cPhoto,self.x])
             #print str(self.addr)
-            chdir(str(self.addr))
+            
+            #中文地址加编码utf-8
+            path = unicode(self.addr , "utf8")
+            
+            chdir(str(path))
             proxy_handler = urllib2.ProxyHandler({'http': '127.0.0.1:11211'})
             opener = urllib2.build_opener(proxy_handler)
             f = opener.open(imgurl)
@@ -127,6 +133,11 @@ class BigWorkThread(QtCore.QThread):
     #返回子线程进度方法
     def returnProgress(self):
         self.progress.emit([self.jpgx,self.cPhoto,self.x])
+    
+    def getDomainTop(self):
+        num = str(self.globalurl).find('thumbnails')
+        a = str(self.globalurl[0:num])
+        return a
     
     #重写 run() 函数，在里面干大事。
     def run(self):

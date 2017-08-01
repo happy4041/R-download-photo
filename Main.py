@@ -9,7 +9,8 @@ from PyQt4 import QtCore, QtGui
 from ui import Ui_Dialog
 import sys
 import time
-
+reload(sys)  
+sys.setdefaultencoding('utf8') 
 #新建自己的窗口类，继承 QDialog 和 ui类
 class MyDialog(QtGui.QDialog,Ui_Dialog):
     global url
@@ -20,8 +21,8 @@ class MyDialog(QtGui.QDialog,Ui_Dialog):
         #连接 QPushButton 的点击信号到槽 BigWork()
         self.pushButton_2.clicked.connect(self.BigWork)
         #测试set值
-        self.textEdit.setPlainText("http://sabrinacarpenterbr.com/galeria/thumbnails.php?album=1107")
-        self.textEdit_2.setPlainText(r"D:\Users\happy\Desktop\sab\0507 - Chegando Ao Aeroporto De Vancouver, Canada")
+        self.textEdit.setPlainText("http://sabrinacarpenterbr.com/galeria/thumbnails.php?album=")
+        #self.textEdit_2.setPlainText(r"D:\Users\happy\Desktop\sab\图片\2007 - 'Extra' Na Universal Studios Hollywood Em Universal City")
         
         
     def BigWork(self):
